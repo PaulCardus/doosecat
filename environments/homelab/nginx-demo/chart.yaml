@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-hello-test
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://kubernetes.github.io/ingress-nginx'
+    chart: ingress-nginx
+    targetRevision: 4.8.3
+    helm:
+      values: |
+        defaultBackend:
+          enabled: true
+          image:
+            repository: nginxdemos/hello
+            tag: plain-text
+          replicaCount: 1
+          service:
+            servicePort: 8443
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            pathType: Prefix
+            hostname: hello.doosecat.duckdns.org
+            path: /
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: nginx-hello-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
