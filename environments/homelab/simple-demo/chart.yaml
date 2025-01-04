@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-k8s-test
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://charts.cowboysysop.com'
+    chart: hello-kubernetes
+    targetRevision: 1.0.4
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          className: nginx
+          hosts:
+            - host: demo.doosecat.duckdns.org
+              paths:
+                - path: /
+                  pathType: Prefix
+        message: "Hello from GitOps!"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: hello-k8s-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
