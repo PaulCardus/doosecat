@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-test
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://charts.bitnami.com/bitnami'
+    chart: redis
+    targetRevision: 18.3.2
+    helm:
+      values: |
+        auth:
+          enabled: false  # Disable password for testing
+        master:
+          persistence:
+            enabled: false  # Disable persistence for test environment
+        replica:
+          replicaCount: 1
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: redis-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
