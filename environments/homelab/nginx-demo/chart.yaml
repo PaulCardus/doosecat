@@ -6,28 +6,23 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://kubernetes.github.io/ingress-nginx'
-    chart: ingress-nginx
-    targetRevision: 4.8.3
+    repoURL: 'https://charts.bitnami.com/bitnami'
+    chart: nginx
+    targetRevision: 15.3.4
     helm:
       values: |
-        defaultBackend:
+        image:
+          repository: nginxdemos/hello
+          tag: plain-text
+        service:
+          type: ClusterIP
+          port: 80
+        ingress:
           enabled: true
-          image:
-            repository: nginxdemos/hello
-            tag: plain-text
-          replicaCount: 1
-          service:
-            servicePort: 8443
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            pathType: Prefix
-            hostname: hello.doosecat.duckdns.org
-            path: /
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /
-              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          hostname: hello.doosecat.duckdns.org  # Replace with your domain
+          pathType: Prefix
+          path: /
+          ingressClassName: nginx
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: nginx-hello-test
