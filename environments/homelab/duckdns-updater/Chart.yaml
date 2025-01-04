@@ -1,6 +1,0 @@
-apiVersion: v2
-name: duckdns-updater
-description: A Helm chart for DuckDNS automatic IP updater
-type: application
-version: 0.1.0
-appVersion: "1.0.0"

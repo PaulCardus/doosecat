@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: duckdns-updater
+  namespace: hello
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid  # Ensures only one Job runs at a time
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            duckdns: "true"
+          containers:
+          - name: duckdns-updater
+            image: linuxserver/duckdns
+            env:
+            - name: SUBDOMAINS
+              value: "doosecat"
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: duckdns-secret
+                  key: token
+          restartPolicy: OnFailure

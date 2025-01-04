@@ -6,12 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/PaulCardus/doosecat/tree/main/environments/homelab
+    repoURL: https://github.com/PaulCardus/doosecat
     targetRevision: HEAD
-    path: duckdns-updater
-    helm:
-      valueFiles:
-        - values.yaml
+    path: environments/homelab/duckdns-cronjob
   destination:
     server: https://kubernetes.default.svc
     namespace: hello
