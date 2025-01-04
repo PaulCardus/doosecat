@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: duckdns-updater
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/PaulCardus/doosecat/tree/main/environments/homelab
+    targetRevision: HEAD
+    path: duckdns-cronjob
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

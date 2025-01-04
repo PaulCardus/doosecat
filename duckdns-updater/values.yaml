@@ -1,0 +1,19 @@
+# values.yaml
+schedule: "*/5 * * * *"
+image:
+  repository: linuxserver/duckdns
+  tag: latest
+  pullPolicy: IfNotPresent
+
+subdomains: "doosecat"
+namespace: duckdns
+
+nodeSelector:
+  duckdns: "true"
+
+# For the secret, you'll want to either:
+# - create it separately
+# - or include it in the templates with proper values
+secret:
+  name: duckdns-secret
+  tokenKey: token
