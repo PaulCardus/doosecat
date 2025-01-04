@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/PaulCardus/doosecat/tree/main/environments/homelab
     targetRevision: HEAD
-    path: duckdns-cronjob
+    path: duckdns-updater
     helm:
       valueFiles:
         - values.yaml
