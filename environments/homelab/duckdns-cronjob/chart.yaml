@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: duckdns-updater
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://ebrianne.github.io/helm-charts/  # Helm chart repo URL
+    chart: duckdns-go                                # Helm chart name
+    targetRevision: 1.2.3                            # Optional: Chart version
+    helm:
+      values: |                                       # Helm values
+        duckdns:
+          subdomains:
+            - "doosecat"                              # Replace with your subdomain
+        extraEnv:                                     # Additional environment variables
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: duckdns-secret                    # Secret name
+              key: token                              # Key within the secret
+  destination:
+    server: https://kubernetes.default.svc           # Kubernetes API server
+    namespace: duck-dns                                 # Target namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
