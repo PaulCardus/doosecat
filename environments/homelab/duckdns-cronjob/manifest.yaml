@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: duckdns-updater
-  namespace: duck-dns-updater
+  namespace: hello
 spec:
   schedule: "*/5 * * * *"
   concurrencyPolicy: Forbid  # Ensures only one Job runs at a time
