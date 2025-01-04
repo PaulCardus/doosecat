@@ -15,8 +15,10 @@ spec:
           enabled: false  # Disable password for testing
         master:
           persistence:
-            enabled: false  # Disable persistence for test environment
+            enabled: false  # Disable persistence for master
         replica:
+          persistence:
+            enabled: false  # Disable persistence for replicas
           replicaCount: 1
   destination:
     server: 'https://kubernetes.default.svc'
