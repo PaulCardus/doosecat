@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: duckdns-updater
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://charts.bitnami.com/bitnami'
+    chart: cronjob
+    targetRevision: 1.2.4
+    helm:
+      values: |
+        cronjob:
+          schedule: "*/5 * * * *"
+          concurrencyPolicy: Forbid
+          nodeSelector:
+            duckdns: "true"
+        image:
+          repository: linuxserver/duckdns
+          tag: latest
+        env:
+          - name: SUBDOMAINS
+            value: "doosecat"
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: duckdns-secret
+                key: token
+        restartPolicy: OnFailure
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: duck-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
