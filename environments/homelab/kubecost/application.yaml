@@ -9,9 +9,15 @@ spec:
     chart: cost-analyzer
     repoURL: https://kubecost.github.io/cost-analyzer/
     targetRevision: latest
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: kubecost
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
     helm:
       values: |
         kubecostToken: "Y2FyZHVzdWtAb3V0bG9vay5jb20=xm343yadf98"
