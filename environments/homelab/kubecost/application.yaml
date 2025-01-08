@@ -1,0 +1,71 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubecost
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: cost-analyzer
+    repoURL: https://kubecost.github.io/cost-analyzer/
+    targetRevision: latest
+    helm:
+      values: |
+        kubecostToken: "Y2FyZHVzdWtAb3V0bG9vay5jb20=xm343yadf98"
+        
+        persistentVolume:
+          enabled: false
+        
+        prometheus:
+          enabled: true
+          server:
+            persistentVolume:
+              enabled: false
+          alertmanager:
+            persistentVolume:
+              enabled: false
+          pushgateway:
+            persistentVolume:
+              enabled: false
+              
+        grafana:
+          enabled: true
+          persistence:
+            enabled: false
+          ingress:
+            enabled: true
+            annotations:
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              kubernetes.io/ingress.class: "nginx"
+            hosts:
+              - grafana.doosecat.duckdns.org
+            tls:
+              - secretName: grafana-kubecost-tls
+                hosts:
+                  - grafana.doosecat.duckdns.org
+              
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: "letsencrypt-prod"
+            kubernetes.io/ingress.class: "nginx"
+          hosts:
+            - host: kubecost.doosecat.duckdns.org
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: kubecost-tls
+              hosts:
+                - kubecost.doosecat.duckdns.org
+            
+        thanos:
+          enabled: false
+          
+        kubecostMetrics:
+          emitPodAnnotations: false
+          persistentVolume:
+            enabled: false
+            
+        serviceMonitor:
+          enabled: false
