@@ -11,7 +11,7 @@ spec:
     targetRevision: latest
   destination:
     server: https://kubernetes.default.svc
-    namespace: hello
+    namespace: kubecost
   syncPolicy:
     automated:
       prune: true
